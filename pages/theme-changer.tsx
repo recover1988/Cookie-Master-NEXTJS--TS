@@ -5,10 +5,12 @@ import { GetServerSideProps } from 'next'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 
+interface Props {
+    theme: string
+}
 
-
-const ThemeChangerPage: FC = (props) => {
-    const [currentTheme, setCurrentTheme] = useState('light')
+const ThemeChangerPage: FC<Props> = ({ theme }) => {
+    const [currentTheme, setCurrentTheme] = useState(theme)
 
     const onThemeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedTheme = event.target.value
@@ -20,7 +22,7 @@ const ThemeChangerPage: FC = (props) => {
     }
 
     const onClick = async () => {
-        const {data} = await axios.get('/api/hello')
+        const { data } = await axios.get('/api/hello')
     }
 
     useEffect(() => {
@@ -64,10 +66,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
     // const {cookies} = req.cookies // next ya lo serializa y devuelve el objeto cookie con su key=value
     const { theme = 'light', name = 'No name' } = req.cookies
-
+    // hay que validar o controlar la cookie para que no envie informacion que no necesitemos
+    const validTheme = ['light', 'dark', 'custom']
     return {
         props: {
-            theme,
+            theme: validTheme.includes(theme) ? theme : 'dark',
             name
         }
     }
