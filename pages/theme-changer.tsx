@@ -1,6 +1,8 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Layout } from '../components/layouts'
 import { Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+
+import Cookies from 'js-cookie'
 
 const ThemeChangerPage = () => {
     const [currentTheme, setCurrentTheme] = useState('light')
@@ -8,7 +10,17 @@ const ThemeChangerPage = () => {
     const onThemeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedTheme = event.target.value
         setCurrentTheme(selectedTheme)
+        //localStore
+        localStorage.setItem('theme', selectedTheme)
+        //Cookie
+        Cookies.set('theme', selectedTheme)
     }
+    useEffect(() => {
+        console.log('LocalStorage:', localStorage.getItem('theme'))
+        // se puede guardar hasta 5mb de informacion en el LocalStorage
+        // axios.post('/api/hello', localStorage.getItem('theme'))
+    }, [])
+
     return (
         <Layout>
             <Card>
